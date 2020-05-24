@@ -1,32 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <topBar />
+    <router-view />
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-}
+<script>
+import topBar from "@/components/window/topBar";
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  name: "App",
+  components: {
+    topBar
+  },
+  mounted() {
+    this.$store.commit("log", "App mounted");
+    let initSettings = this.$store.getters.getSettings;
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+    this.$store.commit("log", "Respecting auto-login preferences...");
+    if (this.$store.getters.getSettings.account.email.value == "") {
+      this.$store.commit("log", "New user, sending to splash wizard...");
+      this.$router.push("Landing");
+    } else {
+      this.$store.commit("log", "Sending to login page...");
+      this.$router.push("Login");
+    }
+  }
+};
+</script>

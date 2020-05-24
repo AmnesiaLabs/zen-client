@@ -1,19 +1,23 @@
-# z-client
+# zen-client
 
 ## Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
-npm run serve
+npm run electron:serve
 ```
 
 ### Compiles and minifies for production
+
 ```
-npm run build
+npm run electron:build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Important notice
+
+This repo is not yet prepped for public use and contains code that will likely lead to a broken experience, even in development mode. This notice will be removed once the code is in a contributor-ready state.

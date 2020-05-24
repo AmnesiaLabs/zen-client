@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Zen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./fonts/inter.css">
+  <style>
+  html {
+    border-radius: 10px
+  }
+    body {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      background: linear-gradient(137deg, #222, #000);
+      background-size: 600% 600%;
+      -webkit-animation: grad 6s ease infinite;
+      -moz-animation: grad 6s ease infinite;
+      animation: grad 6s ease infinite;
+
+    }
+
+    @-webkit-keyframes grad {
+      0% {
+        background-position: 2% 0%
+      }
+
+      50% {
+        background-position: 99% 100%
+      }
+
+      100% {
+        background-position: 2% 0%
+      }
+    }
+
+    @-moz-keyframes grad {
+      0% {
+        background-position: 2% 0%
+      }
+
+      50% {
+        background-position: 99% 100%
+      }
+
+      100% {
+        background-position: 2% 0%
+      }
+    }
+
+    @keyframes grad {
+      0% {
+        background-position: 2% 0%
+      }
+
+      50% {
+        background-position: 99% 100%
+      }
+
+      100% {
+        background-position: 2% 0%
+      }
+    }
+
+    .content {
+      position: absolute;
+      width: 203px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes fade {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+    }
+
+    .fade-up {
+      font-size: 11px;
+      width: auto;
+      display: inline-block;
+      opacity: 1;
+      transform: translateY(0px);
+      animation: fade 1800ms ease;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 12px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <p style="font-size: 18px"><img style="max-height: 33px; padding: 4px; background: rgba(0,0,0,0.5); border-radius: 4px" src="./icon_default.png"></p>
+    <p style="opacity:25%; margin-top: -10px; margin-bottom: 10px; font-size: 13px;">Zen is starting up.</p>
+    <p id="text" class="fade-up"></p>
+  </div>
+  <script>
+    var i = 0;
+
+    const arr = [
+      "🚀 Checking for updates...",
+      "💕 Verifying services...",
+      "🙏 Waiting on host!",
+      "🙏 Trying again..."
+    ]
+
+    document.getElementById('text').innerHTML = arr[i]
+
+
+    setInterval(function() {
+      i++;
+      if (i == 4 - 1) {
+        i = 0;
+      }
+      document.getElementById('text').innerHTML = arr[i]
+    }, 4500);
+  </script>
+</body>
+
+</html>
