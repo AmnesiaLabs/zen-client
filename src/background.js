@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require("electron");
 const ipc = require("electron").ipcMain;
 const { join } = require("path");
 
+const autoUpdater = require("./main_modules/autoUpdater");
+
 const { createLoadingWindow } = require("./main_modules/createLoadingWindow");
 const { createMainWindow } = require("./main_modules/createMainWindow");
 
@@ -11,7 +13,8 @@ let loading = null;
 app.setAppUserModelId(process.execPath);
 
 app.once("ready", () => {
-  ipc.on("event", function (event, args) {
+  autoUpdater.init(window);
+  ipc.on("event", function(event, args) {
     if (args.type == "forceQuit") {
       intent = true;
       app.quit();
