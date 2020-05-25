@@ -1,33 +1,38 @@
 <template>
-  <div v-if="tm.length > 0">
+  <div>
     <section
       ref="chatWindow"
       class="overflow-y-scroll absolute w-full right-0 bg-gray-200 flex flex-col p-4 pt-24 pb-24"
       style="height: 100%; z-index: 8888;"
     >
-      <div
-        @contextmenu="handler($event)"
-        class="msg relative mb-4"
-        v-for="(msg, m) in tm"
-        :key="'msg--' + m"
-      >
+      <div v-if="tm.length > 0">
         <div
-          :class="
-            msg.is_from_me
-              ? 'bubble bubble-me float-right bg-blue-500 text-white p-3 rounded-lg'
-              : 'bubble bubble-them float-left bg-gray-300 text-black p-3 rounded-lg'
-          "
+          @contextmenu="handler($event)"
+          class="msg relative mb-4"
+          v-for="(msg, m) in tm"
+          :key="'msg--' + m"
         >
-          <aside
-            class="msg-meta absolute text-xs text-black select-none rounded"
-            :style="
+          <div
+            :class="
               msg.is_from_me
-                ? 'top: -24px; right: 0px;'
-                : 'top: -24px; left: 0px'
+                ? 'bubble bubble-me float-right bg-blue-500 text-white p-3 rounded-lg'
+                : 'bubble bubble-them float-left bg-gray-300 text-black p-3 rounded-lg'
             "
-          ></aside>
-          {{ msg.text }}
+          >
+            <aside
+              class="msg-meta absolute text-xs text-black select-none rounded"
+              :style="
+                msg.is_from_me
+                  ? 'top: -24px; right: 0px;'
+                  : 'top: -24px; left: 0px'
+              "
+            ></aside>
+            {{ msg.text }}
+          </div>
         </div>
+      </div>
+      <div class="m-auto opacity-25 select-none text-xl" v-else>
+        No Messages
       </div>
     </section>
     <bottomBar v-if="tm.length > 0" />
