@@ -7,11 +7,11 @@ Vue.use(Vuex);
 const ipc = require("electron").ipcRenderer;
 import io from "socket.io-client";
 
-export const socket = io("https://tunnel.amnesia.software");
-
 const settingsFile = require("./settingsLoader.js").load;
 const saveSettingsFile = require("./settingsLoader.js").save;
 const localSettings = settingsFile();
+
+export let socket = io(localSettings.account.relay.value);
 
 const store = new Vuex.Store({
   state: {
@@ -38,45 +38,47 @@ const store = new Vuex.Store({
     previews: [],
 
     recentChats: []
-    // recentChats: [{
-    //         id: 0,
-    //         name: 'Alec Black',
-    //         handle: '+19413508900',
-    //         unread: true,
-    //         last_timestamp: '2m',
-    //         messages: [{
-    //                 from: 'me',
-    //                 timestamp: '2m',
-    //                 text: "Hey!"
-    //             },
-    //             {
-    //                 from: 'them',
-    //                 timestamp: '1m',
-    //                 text: "Hy man, what's up!!?"
-    //             },
-    //         ]
-    //     },
-    //     {
-    //         id: 1,
-    //         name: 'John Smith',
-    //         handle: '+5555443433',
+    // recentChats: [
+    //   {
+    //     id: 0,
+    //     name: "Alec Black",
+    //     handle: "+19413508900",
+    //     unread: true,
+    //     last_timestamp: "2m",
+    //     messages: [
+    //       {
+    //         from: "me",
+    //         timestamp: "2m",
+    //         text: "Hey!"
+    //       },
+    //       {
+    //         from: "them",
+    //         timestamp: "1m",
+    //         text: "Hy man, what's up!!?"
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     id: 1,
+    //     name: "John Smith",
+    //     handle: "+5555443433",
 
-    //         unread: true,
-    //         last_timestamp: '2m',
-    //         messages: [{
-    //                 from: 'me',
-    //                 timestamp: '2m',
-    //                 text: "Hi!"
-    //             },
-    //             {
-    //                 from: 'them',
-    //                 timestamp: '1m',
-    //                 text: "Yo, what's up?"
-    //             },
-    //         ]
-    //     }
-
-    // ],
+    //     unread: true,
+    //     last_timestamp: "2m",
+    //     messages: [
+    //       {
+    //         from: "me",
+    //         timestamp: "2m",
+    //         text: "Hi!"
+    //       },
+    //       {
+    //         from: "them",
+    //         timestamp: "1m",
+    //         text: "Yo, what's up?"
+    //       }
+    //     ]
+    //   }
+    // ]
   },
   getters: {
     dashboardPaneSize: state => {
@@ -269,6 +271,17 @@ const store = new Vuex.Store({
     },
 
     socketAuth: (state, creds) => {
+      if (
+        state.settings.account.relay.value !== creds.relay ||
+        state.settings.account.uuid.value !== creds.uuid
+      ) {
+        state.settings.account.relay.value = creds.relay;
+        state.settings.account.uuid.value = creds.uuid;
+        saveSettingsFile(state.settings);
+      }
+
+      socket = io(state.settings.account.relay.value);
+
       state.loading = true;
       state.console.unshift({
         timestamp: Date.now(),
@@ -295,15 +308,9 @@ const store = new Vuex.Store({
             line: "Login was successful"
           });
           state.socket.auth = true;
+          state.socket.connected = true;
           state.socket.authError = "";
-          clientSetName(creds.email);
-
-          if (state.settings.security.doNotRemember.value == false) {
-            if (state.settings.account.email.value == creds.email) return;
-            state.settings.account.email.value = creds.email;
-            state.settings.account.password.value = creds.password;
-            saveSettingsFile(state.settings);
-          }
+          clientSetName(creds.uuid);
         }
       });
     },
@@ -395,7 +402,9 @@ const clientSetName = n => {
   console.log("Setting name");
   socket.emit("client:setName", n, res => {
     if (res == 200) {
-      clientInit();
+      setTimeout(() => {
+        clientInit();
+      }, 300);
     }
     return;
   });
@@ -410,16 +419,56 @@ const clientGetRecentContacts = n => {
 };
 
 const clientGetRecentChatsFromId = n => {
-  console.log(`Getting recent chats... for ${n.handleId}`);
+  console.log(`Getting recent chats... for ${n.handle_id}`);
   socket.emit("raw", {
     type: "recentChats",
-    id: n.handleId
+    id: n.handle_id
   });
 };
 
 const clientInit = n => {
   console.log("Initializing...");
-  router.push("/");
+  router.push("/").catch(() => {});
+
+  socket.on("connect", s => {
+    store.commit("socketOnConnect", true);
+  });
+
+  socket.on("pong", function(ms) {
+    store.commit("socketOnPong", ms);
+  });
+
+  socket.on("reconnect", s => {
+    store.commit("log", "Reconnected...");
+    store.commit("socketOnConnect", true);
+    if (
+      store.getters.getSettings.account.relay.value !== "" &&
+      store.getters.getSettings.account.uuid.value !== ""
+    ) {
+      store.commit("log", "Retrying authentication...");
+      store.commit("socketAuth", {
+        relay: store.getters.getSettings.account.relay.value,
+        uuid: store.getters.getSettings.account.uuid.value
+      });
+    }
+  });
+
+  socket.on("peerJoined", s => {
+    store.commit("peerJoined", s);
+  });
+
+  socket.on("peerLeft", s => {
+    store.commit("peerLeft", s);
+  });
+
+  // { type: "message", handle: "+19413508900", text: "", time: "", fromMe: false }
+  // emit('raw', { type: "newMessage", handle: "+19413508900", text: "what's up", time: Date.now(), fromMe: false })
+  socket.on("raw", s => {
+    console.log("rx: " + s);
+    if (!s.type) return;
+    store.commit(s.type, s);
+  });
+
   clientGetRecentContacts();
 };
 
@@ -455,44 +504,5 @@ const fromAppleTime = ts => {
 
   return new Date((ts + DATE_OFFSET) * 1000);
 };
-
-socket.on("connect", s => {
-  store.commit("socketOnConnect", true);
-});
-
-socket.on("pong", function(ms) {
-  store.commit("socketOnPong", ms);
-});
-
-socket.on("reconnect", s => {
-  store.commit("log", "Reconnected...");
-  store.commit("socketOnConnect", true);
-  if (
-    store.getters.getSettings.account.email.value !== "" &&
-    store.getters.getSettings.account.password.value !== ""
-  ) {
-    store.commit("log", "Retrying authentication...");
-    store.commit("socketAuth", {
-      email: store.getters.getSettings.account.email.value,
-      password: store.getters.getSettings.account.password.value
-    });
-  }
-});
-
-socket.on("peerJoined", s => {
-  store.commit("peerJoined", s);
-});
-
-socket.on("peerLeft", s => {
-  store.commit("peerLeft", s);
-});
-
-// { type: "message", handle: "+19413508900", text: "", time: "", fromMe: false }
-// emit('raw', { type: "newMessage", handle: "+19413508900", text: "what's up", time: Date.now(), fromMe: false })
-socket.on("raw", s => {
-  window.console.log(s);
-  if (!s.type) return;
-  store.commit(s.type, s);
-});
 
 export default store;

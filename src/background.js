@@ -13,7 +13,7 @@ let loading = null;
 app.setAppUserModelId(process.execPath);
 
 app.once("ready", () => {
-  autoUpdater.init(window);
+  autoUpdater.init();
   ipc.on("event", function(event, args) {
     if (args.type == "forceQuit") {
       intent = true;

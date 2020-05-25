@@ -5,7 +5,6 @@
   </div>
 </template>
 
-
 <script>
 import topBar from "@/components/window/topBar";
 
@@ -19,7 +18,7 @@ export default {
     let initSettings = this.$store.getters.getSettings;
 
     this.$store.commit("log", "Respecting auto-login preferences...");
-    if (this.$store.getters.getSettings.account.email.value == "") {
+    if (this.$store.getters.getSettings.account.relay.value == "") {
       this.$store.commit("log", "New user, sending to splash wizard...");
       this.$router.push("Landing");
     } else {

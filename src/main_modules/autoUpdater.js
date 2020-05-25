@@ -22,8 +22,8 @@ autoUpdater.on("update-downloaded", (ev, info) => {
   }, 5000);
 });
 
-const init = win => {
-  autoUpdater.checkForUpdatesAndNotify();
+const init = () => {
+  autoUpdater.checkForUpdates();
 };
 
 module.exports = {
