@@ -13,7 +13,9 @@ const createLoadingWindow = () => {
   });
 
   const urlToLoad = {
-    dev: process.env.WEBPACK_DEV_SERVER_URL + "index.html#/loading",
+    dev: process.env.WEBPACK_DEV_SERVER_URL
+      ? process.env.WEBPACK_DEV_SERVER_URL + "index.html#/loading"
+      : "app://./index.html#/loading",
     prod: "app://./index.html#/loading"
   };
 

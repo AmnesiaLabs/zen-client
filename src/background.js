@@ -14,6 +14,7 @@ app.setAppUserModelId(process.execPath);
 app.setName("Zen");
 
 app.once("ready", () => {
+  require("vue-cli-plugin-electron-builder/lib").createProtocol("app");
   let loadingWindow = createLoadingWindow(app);
   let window = createMainWindow(app, loadingWindow);
   autoUpdater.init();
