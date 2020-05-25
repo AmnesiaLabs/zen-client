@@ -1,5 +1,7 @@
 # Zen Client 
 
+<img src="https://github.com/AmnesiaLabs/zen-client/blob/master/build/icons/24x24.png" align="right" />
+
 💬💻 A cross-platform, iMessage desktop client intended for use with [Zen Bridge](https://github.com/AmnesiaLabs/zen-bridge) –
 
 - Written in Electron and Vue (with Tailwind as a style framework).
