@@ -36,49 +36,7 @@ const store = new Vuex.Store({
 
     messages: [],
     previews: [],
-
     recentChats: []
-    // recentChats: [
-    //   {
-    //     id: 0,
-    //     name: "Alec Black",
-    //     handle: "+19413508900",
-    //     unread: true,
-    //     last_timestamp: "2m",
-    //     messages: [
-    //       {
-    //         from: "me",
-    //         timestamp: "2m",
-    //         text: "Hey!"
-    //       },
-    //       {
-    //         from: "them",
-    //         timestamp: "1m",
-    //         text: "Hy man, what's up!!?"
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     id: 1,
-    //     name: "John Smith",
-    //     handle: "+5555443433",
-
-    //     unread: true,
-    //     last_timestamp: "2m",
-    //     messages: [
-    //       {
-    //         from: "me",
-    //         timestamp: "2m",
-    //         text: "Hi!"
-    //       },
-    //       {
-    //         from: "them",
-    //         timestamp: "1m",
-    //         text: "Yo, what's up?"
-    //       }
-    //     ]
-    //   }
-    // ]
   },
   getters: {
     dashboardPaneSize: state => {
@@ -131,7 +89,7 @@ const store = new Vuex.Store({
     },
 
     targetMessages: state => {
-      return state.messages.reverse();
+      return state.messages.sort((a, b) => (a.date > b.date ? 1 : -1));
     },
 
     getPreviews: state => {
@@ -185,6 +143,29 @@ const store = new Vuex.Store({
       });
       state.socket.peers = p;
       state.loading = false;
+    },
+
+    sendMessage: (state, msg) => {
+      state.loading = true;
+
+      console.log(msg);
+
+      clientSendMessage(msg);
+
+      let timestamp = new Date();
+      let tar = state.messages.sort((a, b) => (a.date > b.date ? 1 : -1));
+      timestamp = tar[tar.length - 1].date + 99999999;
+
+      state.messages.push({
+        date: timestamp,
+        handle: msg.handle_id,
+        is_from_me: 1,
+        text: msg.text
+      });
+
+      setTimeout(() => {
+        state.loading = false;
+      }, 300);
     },
 
     // called when recent contacts are provided
@@ -345,8 +326,6 @@ const store = new Vuex.Store({
       state.isDark = !state.isDark;
     },
 
-    // bridge stuff
-
     newMessage: (state, l) => {
       state.loading = true;
       state.recentChats.forEach(ch => {
@@ -399,7 +378,6 @@ const store = new Vuex.Store({
 });
 
 const clientSetName = n => {
-  console.log("Setting name");
   socket.emit("client:setName", n, res => {
     if (res == 200) {
       setTimeout(() => {
@@ -411,10 +389,17 @@ const clientSetName = n => {
 };
 
 const clientGetRecentContacts = n => {
-  window.console.log("Emitting clientGetRecentContacts");
   socket.emit("raw", {
     type: "recentContacts",
     id: 0
+  });
+};
+
+const clientSendMessage = n => {
+  socket.emit("raw", {
+    type: "send",
+    id: n.handle_id,
+    text: n.text
   });
 };
 
@@ -461,10 +446,7 @@ const clientInit = n => {
     store.commit("peerLeft", s);
   });
 
-  // { type: "message", handle: "+19413508900", text: "", time: "", fromMe: false }
-  // emit('raw', { type: "newMessage", handle: "+19413508900", text: "what's up", time: Date.now(), fromMe: false })
   socket.on("raw", s => {
-    console.log("rx: " + s);
     if (!s.type) return;
     store.commit(s.type, s);
   });

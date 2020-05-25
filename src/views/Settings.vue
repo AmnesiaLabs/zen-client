@@ -56,7 +56,7 @@
             </div>
             <div class="w-full relative bg-gray-60">
               <div
-                class="w-full block md:flex justify-between border-b border-gray-200"
+                class="w-full block justify-between border-b border-gray-200"
                 v-for="(param, p) in pending[setting]"
                 :key="'param-' + p"
               >

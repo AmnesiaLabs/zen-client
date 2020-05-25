@@ -1,15 +1,14 @@
 <template>
-  <div>
+  <div v-if="tm.length > 0">
     <section
       ref="chatWindow"
       class="overflow-y-scroll absolute w-full right-0 bg-gray-200 flex flex-col p-4 pt-24 pb-24"
       style="height: 100%; z-index: 8888;"
     >
       <div
-        v-if="$store.getters.targetMessages.length > 0"
         @contextmenu="handler($event)"
         class="msg relative mb-4"
-        v-for="(msg, m) in $store.getters.targetMessages"
+        v-for="(msg, m) in tm"
         :key="'msg--' + m"
       >
         <div
@@ -31,7 +30,7 @@
         </div>
       </div>
     </section>
-    <bottomBar />
+    <bottomBar v-if="tm.length > 0" />
   </div>
 </template>
 
@@ -48,6 +47,11 @@ export default {
   computed: {
     targetWatch() {
       return this.$store.getters.targetMessages;
+    },
+    tm() {
+      return this.$store.getters.targetMessages
+        ? this.$store.getters.targetMessages
+        : [];
     }
   },
   watch: {
@@ -68,6 +72,7 @@ export default {
       e.preventDefault();
     },
     scrollToBottom: function(e) {
+      if (!this.$refs.chatWindow) return;
       this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight;
     }
   }
