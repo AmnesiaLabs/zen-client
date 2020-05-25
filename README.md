@@ -1,8 +1,19 @@
-# Zen Client
+# Zen Client 
 
-Zen Client is a cross-platform iMessage client.
+<img align="right" src="https://i.imgur.com/hQMkd3y.gif" width="440">
 
-Just looking to download? Head to [Releases](https://github.com/AmnesiaLabs/zen-client/releases).
+💬💻 A cross-platform, iMessage desktop client intended for use with [Zen Bridge](https://github.com/AmnesiaLabs/zen-bridge) –
+
+- Written in Electron and Vue (with Tailwind as a style framework).
+- Simple, dependable and hackable.
+- Open source and runs on Windows, Linux, chromeOS and even macOS 😂
+- Will soon support file attachments and a lot more (it's very young!)
+
+[![package version](https://img.shields.io/github/package-json/v/AmnesiaLabs/zen-client?color=g&label=version)](https://github.com/AmnesiaLabs/zen-client)
+[![package issues](https://img.shields.io/github/issues-raw/AmnesiaLabs/zen-client)](https://github.com/AmnesiaLabs/zen-client)
+[![package issues](https://img.shields.io/github/issues-closed/AmnesiaLabs/zen-client)](https://github.com/AmnesiaLabs/zen-client)
+
+🧶 Just looking to download? Head to [Releases](https://github.com/AmnesiaLabs/zen-client/releases).
 
 ## Installation
 
