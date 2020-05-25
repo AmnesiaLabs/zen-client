@@ -1,6 +1,6 @@
 # Zen Client 
 
-<img align="right" src="https://i.imgur.com/hQMkd3y.gif" width="440">
+<img align="right" src="https://i.imgur.com/hQMkd3y.gifv" width="440">
 
 💬💻 A cross-platform, iMessage desktop client intended for use with [Zen Bridge](https://github.com/AmnesiaLabs/zen-bridge) –
 
