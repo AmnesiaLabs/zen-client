@@ -11,8 +11,11 @@ let window = null;
 let loading = null;
 
 app.setAppUserModelId(process.execPath);
+app.setName("Zen");
 
 app.once("ready", () => {
+  let loadingWindow = createLoadingWindow(app);
+  let window = createMainWindow(app, loadingWindow);
   autoUpdater.init();
   ipc.on("event", function(event, args) {
     if (args.type == "forceQuit") {
@@ -33,7 +36,4 @@ app.once("ready", () => {
       window.show();
     }
   });
-
-  let loading = createLoadingWindow(app);
-  let window = createMainWindow(app, loading);
 });

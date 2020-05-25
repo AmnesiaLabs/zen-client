@@ -152,9 +152,17 @@ export default {
     }
   },
   mounted() {
+    this.$store.commit("log", "App mounted");
+    let initSettings = this.$store.getters.getSettings;
+
     let s = this.$store.getters.getSettings;
 
     if (s.security == undefined) return;
+
+    if (s.account.relay.value == "") {
+      this.$store.commit("log", "New user, sending to splash wizard...");
+      this.$router.push("Landing");
+    }
 
     if (s.security.doNotRemember.value == false) {
       this.relay = s.account.relay.value;

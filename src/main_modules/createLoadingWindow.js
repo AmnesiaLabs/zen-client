@@ -1,27 +1,34 @@
 const { BrowserWindow } = require("electron");
-const createLoadingWindow = app => {
-  loading = new BrowserWindow({
+const createLoadingWindow = () => {
+  let window = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true
+    },
     width: 300,
-    height: 300,
+    height: 230,
     show: false,
     frame: false,
     transparent: true,
     resizable: false
   });
 
-  loading.once("ready-to-show", () => {
-    loading.show();
+  const urlToLoad = {
+    dev: process.env.WEBPACK_DEV_SERVER_URL + "index.html#/loading",
+    prod: "app://./index.html#/loading"
+  };
+
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    window.loadURL(urlToLoad.dev);
+  } else {
+    window.loadURL(urlToLoad.prod);
+  }
+  console.log(urlToLoad);
+
+  window.webContents.once("dom-ready", () => {
+    window.show();
   });
 
-  let url = require("url").format({
-    protocol: "file",
-    slashes: true,
-    pathname: require("path").join(__dirname, "assets", "loading.html")
-  });
-
-  loading.loadURL(url);
-
-  return loading;
+  return window;
 };
 
 module.exports = {

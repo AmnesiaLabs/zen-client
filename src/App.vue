@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <topBar />
+    <topBar v-if="$router.currentRoute.path !== '/loading'" />
     <router-view />
   </div>
 </template>
@@ -14,6 +14,7 @@ export default {
     topBar
   },
   mounted() {
+    if (this.$router.currentRoute.path === "/loading") return;
     this.$store.commit("log", "App mounted");
     let initSettings = this.$store.getters.getSettings;
 
