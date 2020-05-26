@@ -47,11 +47,10 @@
 <script>
 export default {
   name: "Landing",
-  mounted() {
-    this.$refs.wizard.$el.classList.add("wizard-open");
-  },
+
   data() {
     return {
+      hasShown: false,
       wizardClass: "wizard-hidden wizard-open px-4 flex my-auto w-full",
       current: 0,
       steps: [
@@ -71,23 +70,34 @@ export default {
       ]
     };
   },
+  mounted() {
+    if (this.$store.state.settings.account.uuid.value !== "")
+      this.$router.push("Login");
+  },
   methods: {
     next() {
       this.wizardClass = "wizard-hidden px-4 flex my-auto w-full";
-      setTimeout(() => {
-        this.current++;
-        this.wizardClass = "wizard-hidden wizard-open px-4 flex my-auto w-full";
-      }, 240);
+      if (this.steps.length === this.current + 1) {
+        this.current = 0;
+        this.$router.push("Login");
+      } else {
+        console.log(this.steps.length, this.current + 1);
+        setTimeout(() => {
+          this.current++;
+          this.wizardClass =
+            "wizard-hidden wizard-open px-4 flex my-auto w-full";
+        }, 240);
+      }
     }
   },
   watch: {
     current: {
-      handler: function() {
-        if (this.current == this.steps.length) {
+      handler: function(n, o) {
+        if (n === this.steps.length) {
           this.$router.push("/login");
         }
       },
-      deep: true
+      deep: false
     }
   }
 };

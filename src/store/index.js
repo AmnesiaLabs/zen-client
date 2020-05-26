@@ -253,15 +253,17 @@ const store = new Vuex.Store({
 
     socketAuth: (state, creds) => {
       if (
-        state.settings.account.relay.value !== creds.relay ||
+        (state.settings &&
+          state.settings.accounts &&
+          state.settings.account.relay.value !== creds.relay) ||
         state.settings.account.uuid.value !== creds.uuid
       ) {
         state.settings.account.relay.value = creds.relay;
         state.settings.account.uuid.value = creds.uuid;
         saveSettingsFile(state.settings);
+      } else {
+        socket = io(state.settings.account.relay.value);
       }
-
-      socket = io(state.settings.account.relay.value);
 
       state.loading = true;
       state.console.unshift({

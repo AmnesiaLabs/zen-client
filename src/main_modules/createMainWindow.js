@@ -24,9 +24,9 @@ const createMainWindow = async (app, loading) => {
 
   const urlToLoad = {
     dev: process.env.WEBPACK_DEV_SERVER_URL
-      ? process.env.WEBPACK_DEV_SERVER_URL + "index.html#/login"
-      : "app://./index.html#/login",
-    prod: "app://./index.html#/login"
+      ? process.env.WEBPACK_DEV_SERVER_URL + "index.html#/landing"
+      : "app://./index.html#/landing",
+    prod: "app://./index.html#/landing"
   };
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
