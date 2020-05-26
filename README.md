@@ -13,7 +13,7 @@
 [![package issues](https://img.shields.io/github/issues-raw/AmnesiaLabs/zen-client)](https://github.com/AmnesiaLabs/zen-client)
 [![package issues](https://img.shields.io/github/issues-closed/AmnesiaLabs/zen-client)](https://github.com/AmnesiaLabs/zen-client)
 
-🧶 Just looking to download? Head to [Releases](https://github.com/AmnesiaLabs/zen-client/releases).
+🧶 Just looking to download? Head to [Releases](https://github.com/AmnesiaLabs/zen-client/releases/latest).
 
 ## Installation
 
