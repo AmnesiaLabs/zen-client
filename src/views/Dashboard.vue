@@ -46,6 +46,10 @@ export default {
   },
 
   mounted() {
+    this.$store.commit("socketAuth", {
+      relay: this.$store.getters.getSettings.account.relay.value,
+      uuid: this.$store.getters.getSettings.account.uuid.value
+    });
     setTimeout(() => {
       this.$store.commit("setLoading", false);
     }, 500);

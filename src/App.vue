@@ -12,6 +12,7 @@ export default {
   name: "App",
   components: {
     topBar
-  }
+  },
+  mounted() {}
 };
 </script>

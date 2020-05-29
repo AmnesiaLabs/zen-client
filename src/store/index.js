@@ -89,6 +89,7 @@ const store = new Vuex.Store({
     },
 
     targetMessages: state => {
+      if (!state.messages) return [];
       return state.messages.sort((a, b) => (a.date > b.date ? 1 : -1));
     },
 
@@ -205,18 +206,20 @@ const store = new Vuex.Store({
       });
       state.messages = p.data;
 
-      if (state.previews.filter(x => x.id == p.data[0].handle).length == 0) {
-        state.previews.push({
-          id: p.data[0].handle,
-          text: p.data[0].text,
-          date: fromAppleTime(p.data[0].date)
-        });
-      } else {
-        state.previews.forEach(x => {
-          if (x.id == p.data[0].handle) {
-            p.text = p.data[0].text;
-          }
-        });
+      if (p.data[0]) {
+        if (state.previews.filter(x => x.id == p.data[0].handle).length == 0) {
+          state.previews.push({
+            id: p.data[0].handle,
+            text: p.data[0].text,
+            date: fromAppleTime(p.data[0].date)
+          });
+        } else {
+          state.previews.forEach(x => {
+            if (x.id == p.data[0].handle) {
+              p.text = p.data[0].text;
+            }
+          });
+        }
       }
 
       state.loading = false;

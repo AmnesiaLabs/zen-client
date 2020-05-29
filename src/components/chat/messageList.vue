@@ -8,7 +8,7 @@
       <div v-if="tm.length > 0">
         <div
           @contextmenu="handler($event)"
-          class="msg relative mb-4"
+          class="msg relative mb-4 w-full"
           v-for="(msg, m) in tm"
           :key="'msg--' + m"
         >
@@ -103,7 +103,6 @@ aside.msg-meta {
 }
 
 .bubble {
-  display: inline-block;
   width: auto;
 }
 </style>

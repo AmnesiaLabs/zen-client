@@ -18,7 +18,8 @@ app.once("ready", () => {
   let loadingWindow = createLoadingWindow(app);
   let window = createMainWindow(app, loadingWindow);
   autoUpdater.init();
-  ipc.on("event", function(event, args) {
+
+  ipc.on("event", (event, args) => {
     if (args.type == "forceQuit") {
       intent = true;
       app.quit();
@@ -29,7 +30,7 @@ app.once("ready", () => {
     }
 
     if (args.type == "hide") {
-      window.hide();
+      window.minimize();
     }
 
     if (args.type == "notif_clicked") {
