@@ -16,7 +16,7 @@
   "dependencies": {
     "@tailwindcss/ui": "^0.1.2",
     "axios": "^0.19.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-sass": "^4.13.1",
     "postcss": "^7.0.27",
     "socket.io": "^2.3.0",
